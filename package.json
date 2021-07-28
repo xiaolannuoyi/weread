@@ -1,0 +1,12 @@
+{
+    "name": "weRead",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "download": "^8.0.0",
+        "request": "^2.88.2",
+        "request-promise": "^4.2.5"
+    }
+}
