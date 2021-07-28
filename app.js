@@ -65,7 +65,7 @@ async function getWeread(action) {
 function sendNotify(title, desp) {
     return axios({
         method: 'POST',
-        url: `https://sc.ftqq.com/${serverJ}.send?title=${title}&desp=${desp}`,
+        url: `https://sc.ftqq.com/${serverJ}.send?title=${encodeURI(title)}&desp=${encodeURI(desp)}`,
     });
 }
 
