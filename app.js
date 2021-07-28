@@ -61,6 +61,23 @@ async function getWeread(label, action) {
     // console.warn(label, res.data);
     return res.data;
 }
+//推送
+async function sendNotify(text, desp) {
+    const options = {
+        uri: `https://sc.ftqq.com/${serverJ}.send`,
+        form: { text, desp },
+        json: true,
+        method: 'POST',
+    };
+    await rp
+        .post(options)
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
 
 async function start() {
     //剩余天数
@@ -69,7 +86,7 @@ async function start() {
     const result = [];
     for (let { label, action } of rq) {
         const res = await getWeread(label, action);
-        result.push(res + '\n');
+        result.push(res);
     }
     //结果内容
     const content = getContent(remainday, result.join('\n'));
