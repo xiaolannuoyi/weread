@@ -4,6 +4,7 @@ const axios = require('axios');
 // 公共变量
 const serverJ = process.env.PUSH_KEY;
 const Cookie = process.env.WEREAD_COOKIE;
+const wsID = process.env.WS_ID;
 // const wxID = getCookie(Cookie, 'wr_vid');
 
 async function getContent(remainday, wereadText) {
@@ -20,7 +21,7 @@ async function getContent(remainday, wereadText) {
     return `${time} \n剩余天数：${remainday}天；\n${wereadText}\n\n`;
 }
 //剩余天数
-async function getRemainday(text, desp) {
+async function getRemainday() {
     const res = await axios({
         method: 'get',
         url: 'https://weread.qq.com/web/pay/memberCardSummary?pf=ios',
@@ -50,33 +51,22 @@ const rq = [
         action: 'link',
     },
 ];
-async function getWeread(label, action) {
+async function getWeread(action) {
     const res = await axios({
         method: 'get',
-        url: `https://weread.qnmlgb.tech/onestep_submit/5df0ae5e667c7a6bed1a843b?action=${action}`,
+        url: `https://weread.qnmlgb.tech/onestep_submit/${wsID}?action=${action}`,
         headers: {
             Cookie,
         },
     });
-    // console.warn(label, res.data);
     return res.data;
 }
 //推送
-async function sendNotify(text, desp) {
-    const options = {
-        uri: `https://sc.ftqq.com/${serverJ}.send`,
-        form: { text, desp },
-        json: true,
+function sendNotify(title, desp) {
+    return axios({
         method: 'POST',
-    };
-    await rp
-        .post(options)
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        url: `https://sc.ftqq.com/${serverJ}.send?title=${title}&desp=${desp}`,
+    });
 }
 
 async function start() {
@@ -84,8 +74,8 @@ async function start() {
     const remainday = await getRemainday();
     //组队
     const result = [];
-    for (let { label, action } of rq) {
-        const res = await getWeread(label, action);
+    for (let { action } of rq) {
+        const res = await getWeread(action);
         result.push(res);
     }
     //结果内容
