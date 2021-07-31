@@ -51,7 +51,7 @@ const rq = [
         action: 'link',
     },
 ];
-async function getWeread(action) {
+async function getWeread(label, action) {
     const res = await axios({
         method: 'get',
         url: `https://weread.qnmlgb.tech/onestep_submit/${wsID}?action=${action}`,
@@ -59,6 +59,7 @@ async function getWeread(action) {
             Cookie,
         },
     });
+    console.log(label, res.data);
     return res.data;
 }
 //推送
@@ -74,13 +75,14 @@ async function start() {
     const remainday = await getRemainday();
     //组队
     const result = [];
-    for (let { action } of rq) {
-        const res = await getWeread(action);
+    for (let { label, action } of rq) {
+        const res = await getWeread(label, action);
         result.push(res);
     }
     //结果内容
     const content = getContent(remainday, result.join('\n'));
     await fs.appendFileSync('./config.txt', content, 'utf8');
+    console.log('发送结果', content);
 
     if (serverJ) {
         await sendNotify('微信读书', content);
