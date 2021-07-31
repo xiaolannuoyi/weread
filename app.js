@@ -7,7 +7,7 @@ const Cookie = process.env.WEREAD_COOKIE;
 const wsID = process.env.WS_ID;
 // const wxID = getCookie(Cookie, 'wr_vid');
 
-async function getContent(remainday, wereadText) {
+function getContent(remainday, wereadText) {
     const time = new Intl.DateTimeFormat('zh', {
         year: 'numeric',
         month: '2-digit',
@@ -60,7 +60,7 @@ async function getWeread(label, action) {
         },
     });
     console.log(label, res.data);
-    return res.data;
+    return label + ':' + res.data;
 }
 //推送
 function sendNotify(title, desp) {
